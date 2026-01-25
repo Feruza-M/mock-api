@@ -57,7 +57,7 @@ pipeline {
 
         stage('Deploy to Remote Server') {
             steps {
-                sshagent(['jenkins-key']) {
+                sshagent(['deploy-key']) {
                     sh """
                       ssh -o StrictHostKeyChecking=no ${SSH_USER}@${SSH_HOST} '
                         docker pull ${IMAGE_NAME}:${IMAGE_TAG} &&
