@@ -7,7 +7,7 @@ pipeline {
         CONTAINER  = "mock-api"
         APP_PORT   = "8000"
 
-        SSH_HOST = "YOUR.SERVER.IP"
+        SSH_HOST = "35.168.41.105"
         SSH_USER = "ubuntu"
     }
 
@@ -22,8 +22,18 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
+                sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
+            }
+        }
+
+        stage('QA Tests') {
+            steps {
                 sh """
-                  docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                  docker rm -f qa-${CONTAINER} || true
+                  docker run -d --name qa-${CONTAINER} -p 18000:${APP_PORT} ${IMAGE_NAME}:${IMAGE_TAG}
+                  sleep 5
+                  docker exec qa-${CONTAINER} pytest
+                  docker rm -f qa-${CONTAINER}
                 """
             }
         }
@@ -42,18 +52,6 @@ pipeline {
                       docker push ${IMAGE_NAME}:${IMAGE_TAG}
                     """
                 }
-            }
-        }
-
-        stage('QA Tests') {
-            steps {
-                sh """
-                  docker rm -f qa-${CONTAINER} || true
-                  docker run -d --name qa-${CONTAINER} ${IMAGE_NAME}:${IMAGE_TAG}
-                  sleep 5
-                  docker exec qa-${CONTAINER} pytest
-                  docker rm -f qa-${CONTAINER}
-                """
             }
         }
 
@@ -77,7 +75,7 @@ pipeline {
                   sleep 5
                   curl http://${SSH_HOST}:${APP_PORT}/order
                   curl http://${SSH_HOST}:${APP_PORT}/user
-                  curl http://${SSH_HOST}:${APP_PORT}/catalog | jq '.[0]'
+                  curl http://${SSH_HOST}:${APP_PORT}/catalog
                 """
             }
         }
