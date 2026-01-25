@@ -16,7 +16,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/AnastasiyaGapochkina01/mock-api.git'
+                    url: 'https://github.com/Feruza-M/mock-api.git'
             }
         }
 
