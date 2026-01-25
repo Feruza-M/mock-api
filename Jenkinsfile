@@ -48,6 +48,7 @@ pipeline {
         stage('QA Tests') {
             steps {
                 sh """
+                  docker rm -f qa-${CONTAINER} || true
                   docker run -d --name qa-${CONTAINER} ${IMAGE_NAME}:${IMAGE_TAG}
                   sleep 5
                   docker exec qa-${CONTAINER} pytest
