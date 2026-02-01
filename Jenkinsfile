@@ -8,7 +8,7 @@ pipeline {
         APP_PORT   = "8000"
 
         SSH_HOST = "44.200.64.60"
-        SSH_USER = "ubuntu"
+        SSH_USER = "jenkins"
     }
 
     stages {
