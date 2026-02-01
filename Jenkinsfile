@@ -7,7 +7,7 @@ pipeline {
         CONTAINER  = "mock-api"
         APP_PORT   = "8000"
 
-        SSH_HOST = "35.168.41.105"
+        SSH_HOST = "44.200.64.60"
         SSH_USER = "ubuntu"
     }
 
